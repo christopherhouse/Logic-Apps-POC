@@ -1,4 +1,5 @@
 import * as vn from './modules/virtualNetwork/virtualNetwork.bicep'
+import * as func from './modules/userDefined/userDefinedFunctions.bicep'
 
 param workloadName string
 param environmentSuffix string
@@ -20,19 +21,14 @@ var appGwNsgName = '${workloadName}-${environmentSuffix}-appgw-nsg'
 var servicesNsgName = '${workloadName}-${environmentSuffix}-services-nsg'
 
 // Key Vault
-var keyVaultName = formatResourceName(workloadName, environmentSuffix, 'kv')
+var keyVaultName = func.formatResourceName(workloadName, environmentSuffix, 'kv')
 
 // App Insights
-var appInsightsName = formatResourceName(workloadName, environmentSuffix, 'ai')
-
-// Custom bicep function to accept a parameter named resourceName that returns output in the format of '${resourceName}-${deployment().name}'
-func generateDeploymentName(resourceName string) string => '${resourceName}-${deployment().name}'
-
-func formatResourceName(workloadName string, environmentSuffix string, resourceSuffix string) string => '${workloadName}-${environmentSuffix}-${resourceSuffix}'
+var appInsightsName = func.formatResourceName(workloadName, environmentSuffix, 'ai')
 
 // Log Analytics Workspace
 module law './modules/logAnalytics/logAnalyticsWorkspace.bicep' = {
-  name: generateDeploymentName(lawName)
+  name: func.formatDeploymentName(lawName)
   params: {
     location: location
     logAnalyticsWorkspaceName: lawName
@@ -42,7 +38,7 @@ module law './modules/logAnalytics/logAnalyticsWorkspace.bicep' = {
 }
 
 module apimNsg './modules/networkSecurityGroup/apimNetworkSecurityGroup.bicep' = {
-  name: generateDeploymentName(apimNsgName)
+  name: func.formatDeploymentName(apimNsgName)
   params: {
     location: location
     apimSubnetRange: subnetConfigurations.apimSubnet.addressPrefix
@@ -54,7 +50,7 @@ module apimNsg './modules/networkSecurityGroup/apimNetworkSecurityGroup.bicep' =
 }
 
 module appGwNsg './modules/networkSecurityGroup/applicationGatewayNetworkSecurityGroup.bicep' = {
-  name: generateDeploymentName(appGwNsgName)
+  name: func.formatDeploymentName(appGwNsgName)
   params: {
     location: location
     appGatewaySubnetAddressSpace: subnetConfigurations.appGwSubnet.addressPrefix
@@ -65,7 +61,7 @@ module appGwNsg './modules/networkSecurityGroup/applicationGatewayNetworkSecurit
 }
 
 module servicesNsg './modules/networkSecurityGroup/servicesNetworkSecurityGroup.bicep' = {
-  name: generateDeploymentName(servicesNsgName)
+  name: func.formatDeploymentName(servicesNsgName)
   params: {
     location: location
     apimSubnetRange: subnetConfigurations.apimSubnet.addressPrefix
@@ -78,7 +74,7 @@ module servicesNsg './modules/networkSecurityGroup/servicesNetworkSecurityGroup.
 }
 
 module vnet './modules/virtualNetwork/virtualNetwork.bicep' = {
-  name: generateDeploymentName(vnetName)
+  name: func.formatDeploymentName(vnetName)
   params: {
     location: location
     addressPrefixes: addressPrefixes
@@ -92,7 +88,7 @@ module vnet './modules/virtualNetwork/virtualNetwork.bicep' = {
 }
 
 module kv './modules/keyVault/privateKeyVault.bicep' = {
-  name: generateDeploymentName(keyVaultName)
+  name: func.formatDeploymentName(keyVaultName)
   params: {
     location: location
     keyVaultName: keyVaultName
@@ -103,7 +99,7 @@ module kv './modules/keyVault/privateKeyVault.bicep' = {
 }
 
 module ai './modules/applicationInsights/applicationInsights.bicep' = {
-  name: generateDeploymentName(appInsightsName)
+  name: func.formatDeploymentName(appInsightsName)
   params: {
     location: location
     appInsightsName: appInsightsName
