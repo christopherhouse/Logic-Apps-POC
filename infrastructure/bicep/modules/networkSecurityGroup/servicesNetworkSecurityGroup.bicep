@@ -51,7 +51,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = {
             appGatewaySubnetRange
             apimSubnetRange
           ]
-          destinationAddressPrefix: keyVaultSubnetRange
+          destinationAddressPrefix: servicesSubnetRange
           access: 'Allow'
           direction: 'Inbound'
           description: 'Allow HTTPS to services subnet'
