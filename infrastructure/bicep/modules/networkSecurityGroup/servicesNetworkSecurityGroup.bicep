@@ -13,8 +13,8 @@ param apimSubnetRange string
 @description('The subnet range for the Application Gateway subnet')
 param appGatewaySubnetRange string
 
-@description('The subnet range for the Key Vault subnet')
-param keyVaultSubnetRange string
+@description('The subnet range for the services subnet')
+param servicesSubnetRange string
 
 @description('The tags to associate with the API Center resource')
 param tags object = {}
@@ -41,7 +41,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = {
         }
       }
       {
-        name: 'AllowAPIMandAppGWtoKeyVault'
+        name: 'Allow443In'
         properties: {
           priority: 200
           protocol:'Tcp'
@@ -54,7 +54,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = {
           destinationAddressPrefix: keyVaultSubnetRange
           access: 'Allow'
           direction: 'Inbound'
-          description: 'Allow HTTPS from APIM subnet to KeyVault subnet'
+          description: 'Allow HTTPS to services subnet'
         }
       }
       {
