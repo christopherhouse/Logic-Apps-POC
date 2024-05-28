@@ -2,7 +2,6 @@ param appInsightsName string
 param location string
 param logAnalyticsWorkspaceId string
 param keyVaultName string
-param buildId string
 @description('The tags to associate with the API Center resource')
 param tags object = {}
 
@@ -19,7 +18,7 @@ resource ai 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 module connectionString '../keyVault/keyVaultSecret.bicep' = {
-  name: 'app-insights-connection-string-${buildId}'
+  name: 'app-insights-connection-string-${deployment().name}'
   params: {
     keyVaultName: keyVaultName
     secretName: 'appInsightsConnectionString'
@@ -28,7 +27,7 @@ module connectionString '../keyVault/keyVaultSecret.bicep' = {
 }
 
 module iKey '../keyVault/keyVaultSecret.bicep' = {
-  name: 'app-insights-instrumentationkey-${buildId}'
+  name: 'app-insights-instrumentationkey-${deployment().name}'
   params: {
     keyVaultName: keyVaultName
     secretName: 'appInsightsInstrumentationKey'

@@ -13,19 +13,16 @@ param vnetName string
 @description('The resource id of the subnet to link the private endpoint to')
 param servicesSubnetResourceId string
 
-@description('Deployment identifier, used to ensure uniqueness of deployment names')
-param deploymentId string
-
 @description('The tags to associate with the API Center resource')
 param tags object = {}
 
-var kvDeploymentName = '${keyVaultName}-private-kv-${deploymentId}'
+var kvDeploymentName = '${keyVaultName}-private-kv-${deployment().name}'
 
 var kvDnsZoneName = 'privatelink.vaultcore.azure.net'
-var kvDnsZoneDeploymentName = '${kvDnsZoneName}-${deploymentId}'
+var kvDnsZoneDeploymentName = '${kvDnsZoneName}-${deployment().name}'
 
 var kvPeName = '${keyVaultName}-pe'
-var kvPeDeploymentName = '${kvPeName}-${deploymentId}'
+var kvPeDeploymentName = '${kvPeName}-${deployment().name}'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' existing = {
   name: vnetName
