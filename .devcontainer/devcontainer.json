@@ -9,5 +9,17 @@
             "modules": "Az"
         },
         "ghcr.io/devcontainers/features/dotnet:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.copilot",
+                "ms-vscode.azure-account",
+                "ms-vscode.azurecli",
+                "github.copilot-chat",
+                "dracula-theme.theme-dracula",
+                "ms-azuretools.vscode-bicep"
+            ]
+        }
     }
 }
