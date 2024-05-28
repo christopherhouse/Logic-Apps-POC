@@ -29,6 +29,7 @@ module law './modules/logAnalytics/logAnalyticsWorkspace.bicep' = {
     location: location
     logAnalyticsWorkspaceName: lawName
     retentionInDays: logAnalyticsRetentionDays
+    tags: tags
   }
 }
 
@@ -40,6 +41,7 @@ module apimNsg './modules/networkSecurityGroup/apimNetworkSecurityGroup.bicep' =
     appGatewaySubnetRange: subnetConfigurations.appGwSubnet.addressPrefix
     logAnalyticsWorkspaceResourceId: law.outputs.id
     nsgName: apimNsgName
+    tags: tags
   }
 }
 
@@ -50,6 +52,7 @@ module appGwNsg './modules/networkSecurityGroup/applicationGatewayNetworkSecurit
     appGatewaySubnetAddressSpace: subnetConfigurations.appGwSubnet.addressPrefix
     logAnalyticsWorkspaceResourceId: law.outputs.id
     networkSecurityGroupName: appGwNsgName
+    tags: tags
   }
 }
 
@@ -62,6 +65,20 @@ module servicesNsg './modules/networkSecurityGroup/servicesNetworkSecurityGroup.
     servicesSubnetRange: subnetConfigurations.keyVaultSubnet.addressPrefix
     logAnalyticsWorkspaceId: law.outputs.id
     networkSecurityGroupName: servicesNsgName
+    tags: tags
   }
 }
 
+module vnet './modules/virtualNetwork/virtualNetwork.bicep' = {
+  name: generateDeploymentName(vnetName)
+  params: {
+    location: location
+    addressPrefixes: addressPrefixes
+    apimNsgResourceId: apimNsg.outputs.id
+    appGwNsgResourceId: appGwNsg.outputs.id
+    servicesNsgResourceId: servicesNsg.outputs.id
+    subnetConfiguration: subnetConfigurations
+    virtualNetworkName: vnetName
+    tags: tags
+  }
+}

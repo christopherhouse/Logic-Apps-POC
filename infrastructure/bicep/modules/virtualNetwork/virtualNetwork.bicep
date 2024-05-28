@@ -17,7 +17,7 @@ param apimNsgResourceId string
 param appGwNsgResourceId string
 
 @description('The resource ID of the network security group to associate with the Key Vault subnet')
-param keyVaultNsgResourceId string
+param servicesNsgResourceId string
 
 @description('The tags to associate with the API Center resource')
 param tags object = {}
@@ -89,7 +89,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
             }
           ]
           networkSecurityGroup: {
-            id: keyVaultNsgResourceId
+            id: servicesNsgResourceId
           }
         }
       }
